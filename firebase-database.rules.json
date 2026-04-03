@@ -1,0 +1,40 @@
+// firebase-database.rules.json
+// Deploy these rules in Firebase Console → Realtime Database → Rules
+// OR via Firebase CLI: firebase deploy --only database
+
+{
+  "rules": {
+    "tasks": {
+      "$taskId": {
+        // A user can only read/write their own tasks
+        ".read": "auth != null && data.child('userId').val() === auth.uid",
+        ".write": "auth != null && (
+          !data.exists() ||
+          data.child('userId').val() === auth.uid
+        )",
+        ".validate": "newData.hasChildren(['title', 'userId', 'completed', 'createdAt'])",
+        "title": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "userId": {
+          ".validate": "newData.isString() && newData.val() === auth.uid"
+        },
+        "completed": {
+          ".validate": "newData.isBoolean()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "id": {
+          ".validate": "newData.isString()"
+        }
+      }
+    }
+  }
+}
