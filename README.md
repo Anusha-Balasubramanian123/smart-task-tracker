@@ -284,7 +284,7 @@ React Frontend
 The easiest setup for this project is:
 
 - `Frontend:` Vercel or Netlify
-- `Backend:` Render
+- `Backend:` Any Java hosting provider
 - `Database/Auth:` Firebase
 
 ### 1. Prepare environment variables
@@ -292,7 +292,7 @@ The easiest setup for this project is:
 Frontend `frontend/.env`:
 
 ```env
-REACT_APP_API_BASE_URL=https://your-backend.onrender.com
+REACT_APP_API_BASE_URL=https://your-backend-domain.com
 REACT_APP_FIREBASE_API_KEY=...
 REACT_APP_FIREBASE_AUTH_DOMAIN=...
 REACT_APP_FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com/
@@ -323,22 +323,22 @@ On Windows PowerShell:
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("firebase-service-account.json"))
 ```
 
-### 2. Deploy the backend on Render
+### 2. Deploy the backend
 
 1. Push this project to GitHub
-2. In Render, create a new `Web Service`
+2. Create a Java web service on your preferred hosting provider
 3. Select the repo
 4. Use these settings:
 
 ```text
 Root Directory: smart-task-tracker/backend
 Build Command: mvn clean package
-Start Command: mvn spring-boot:run
+Start Command: java -jar target/task-tracker-backend-1.0.0.jar
 ```
 
 5. Add the backend environment variables from above
 6. After deploy, note your backend URL, for example:
-   `https://task-tracker-backend.onrender.com`
+   `https://task-tracker-backend.example.com`
 
 ### 3. Deploy the frontend on Vercel
 
@@ -352,12 +352,12 @@ Output Directory: build
 ```
 
 3. Add the frontend environment variables
-4. Set `REACT_APP_API_BASE_URL` to your Render backend URL
+4. Set `REACT_APP_API_BASE_URL` to your backend URL
 5. Deploy
 
 ### 4. Update backend CORS
 
-Set `CORS_ALLOWED_ORIGINS` in Render to your frontend URL, for example:
+Set `CORS_ALLOWED_ORIGINS` in your backend hosting provider to your frontend URL, for example:
 
 ```env
 CORS_ALLOWED_ORIGINS=https://your-frontend.vercel.app
