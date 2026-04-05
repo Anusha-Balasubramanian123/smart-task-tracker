@@ -13,8 +13,8 @@ public class TaskService {
 
     private final DatabaseReference db;
 
-    public TaskService() {
-        this.db = FirebaseDatabase.getInstance().getReference("tasks");
+    public TaskService(DatabaseReference db) {
+        this.db = db;
     }
 
     // ─── GET ALL tasks for a user ────────────────────────────────────────────

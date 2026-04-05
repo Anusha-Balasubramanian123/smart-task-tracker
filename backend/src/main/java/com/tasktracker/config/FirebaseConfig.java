@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
-import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Bean;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +32,8 @@ public class FirebaseConfig {
     @Value("${firebase.database-url}")
     private String databaseUrl;
 
-    @PostConstruct
-    public void initFirebase() throws IOException {
+    @Bean
+    public FirebaseApp firebaseApp() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
             GoogleCredentials credentials = GoogleCredentials.fromStream(getServiceAccountStream());
 
@@ -40,8 +42,14 @@ public class FirebaseConfig {
                 .setDatabaseUrl(databaseUrl)
                 .build();
 
-            FirebaseApp.initializeApp(options);
+            return FirebaseApp.initializeApp(options);
         }
+        return FirebaseApp.getInstance();
+    }
+
+    @Bean
+    public DatabaseReference databaseReference(FirebaseApp firebaseApp) {
+        return FirebaseDatabase.getInstance(firebaseApp).getReference("tasks");
     }
 
     private InputStream getServiceAccountStream() throws IOException {
